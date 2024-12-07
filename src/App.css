@@ -1,8 +1,26 @@
 #root {
-  max-width: 1280px;
+  /*max-width: 1280px;*/
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+ /* padding: 2rem;*/
+  text-align: start;
+}
+
+.order-banner{
+  width: 100%;
+  height: 207px;
+  background-color: #CE2829;
+}
+.price-tag{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+.rating-comment{
+  display: flex;
+  /*align-items: center;*/
+  align-content: space-between;
 }
 
 .logo {
