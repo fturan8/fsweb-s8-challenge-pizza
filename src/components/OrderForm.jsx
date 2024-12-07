@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import Check from "./Check";
+import Radio from "./Radio";
+
+import From from "./FormPage";
+import FormPage from "./FormPage";
+
 
 export default function OrderForm() {
+  const boyutlar = ["Küçük", "Orta", "Büyük"];
+  //const hamur = ["İnce", "Orta", "Kalın"];
   const ekMalzemeler = [
     "Pepperoni",
     "Tavuk Izgara",
@@ -17,8 +24,10 @@ export default function OrderForm() {
     "Kanada Jambonu",
     "Domates",
     "Jalepeno",
-    "Sucuk",
+    
   ];
+
+
   return (
     <>
       <div className="order-banner"></div>
@@ -37,29 +46,31 @@ export default function OrderForm() {
         malzemelerle kaplanmış, daha sonra geleneksel olarak odun ateşinde bir
         fırında yüksek sıcaklıkta pişirilen, genellikle yuvarlak, düzleştirilmiş
         mayalı buğday bazlı hamurdan oluşan İtalyan kökenli lezzetli bir
-        yemektir. . Küçük bir pizzaya bazen pizzetta denir.
+        yemektir. Küçük bir pizzaya bazen pizzetta denir.
       </p>
-      <div style={{ gap: "100px" }}>
+
+        
+
+      <div style={{ display: "flex", gap: "100px" }}>
         <div>
           <h3>Boyut Seç</h3>
 
           <div style={{ display: "block" }}>
-            <label>
-              <input type="radio" name="boyut" />
-              Büyük
-            </label>
-            <label>
-              <input type="radio" name="boyut" />
-              Orta
-            </label>
-            <label>
-              <input type="radio" name="boyut" />
-              Küyük
-            </label>
+            {boyutlar.map((boyut) => (
+              <Radio
+                key={boyut}
+                fieldName="boyutlar"
+                value={boyut}
+                label={boyut}
+              />
+            ))}
           </div>
         </div>
         <div>
           <h3>Hamur Seç</h3>
+
+          {/*<Dropdown list={hamur} />*/}
+
           <form>
             <select name="hamur">
               <option>ince</option>
@@ -83,6 +94,7 @@ export default function OrderForm() {
           ))}
         </div>
       </div>
+      <FormPage />
     </>
   );
 }
