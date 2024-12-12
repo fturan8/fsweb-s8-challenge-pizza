@@ -9,6 +9,9 @@
   width: 100%;
   height: 207px;
   background-color: #CE2829;
+  align-content: center;
+  
+  
 }
 .price-tag{
   display: flex;

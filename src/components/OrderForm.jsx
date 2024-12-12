@@ -1,37 +1,29 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
-import Check from "./Check";
-import Radio from "./Radio";
-
-import From from "./FormPage";
 import FormPage from "./FormPage";
+import { product } from "../dataList.js";
 
 
 export default function OrderForm() {
-
-  const fiyat= 85.50;
-  
+  //console.log(product);
   return (
     <>
-      <div className="order-banner"></div>
+      <div className="order-banner">
+        <img src="../../images/iteration-1-images/logo.svg"  />
+      </div>
 
-      <h3>Position Absolute Acı Pizza</h3>
+      <h3>{product.name}</h3>
       <div className="price-tag">
-        <h2>{fiyat}₺</h2>
+        <h2>{product.fiyat}₺</h2>
         <div className="rating-comment">
-          <p>4.9</p>
-          <p>(200)</p>
+          <p>{product.rating}</p>
+          <p>{`(${product.countOfComment})`}</p>
         </div>
       </div>
       <p>
-        Frontent Dev olarak hala position:absolute kullanıyorsan bu çok acı
-        pizza tam sana göre. Pizza, domates, peynir ve genellikle çeşitli diğer
-        malzemelerle kaplanmış, daha sonra geleneksel olarak odun ateşinde bir
-        fırında yüksek sıcaklıkta pişirilen, genellikle yuvarlak, düzleştirilmiş
-        mayalı buğday bazlı hamurdan oluşan İtalyan kökenli lezzetli bir
-        yemektir. Küçük bir pizzaya bazen pizzetta denir.
+        {product.description}
       </p>
-      <FormPage fiyat = {fiyat} />
+      <FormPage product = {product} />
       
     </>
   );
