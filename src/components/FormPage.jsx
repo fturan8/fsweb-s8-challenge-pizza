@@ -12,37 +12,36 @@ export default function FormPage(props) {
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
-    setFromData((prev) => {
-      const ekMalzemeler = checked
-        ? [...prev.ekMalzemeler, value]
-        : prev.ekMalzemeler.filter((malzeme) => malzeme !== value);
 
-      //console.log({ ...prev, ekMalzemeler })
+    setFromData((prev) => {
+      const ekMalzemeler =
+        checked && formData.ekMalzemeler.length <= 9 // önce kontrol edip sonra eklediği için 0'dan başlıyor. o yüzden 9'a eşitlik ve küçüklük olarak kontrol ettim.
+          ? [...prev.ekMalzemeler, value]
+          : prev.ekMalzemeler.filter((malzeme) => malzeme !== value);
       return { ...prev, ekMalzemeler };
     });
+    
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const secimlerTutar = formData.ekMalzemeler.length * 5;
 
-    //console.log(secimlerTutar);
-
+    
     if (name === "adet-arti") {
+      // artı butonu işlemleri
       setCount(count + 1);
-      fiyat = (fiyat + secimlerTutar) * (count + 1);
+      fiyat = fiyat * (count + 1); //+ secimlerTutar * (count + 1);
       setFromData((prev) => ({ ...prev, adet: count + 1, price: fiyat }));
     } else if (name === "adet-eksi") {
+      // eksi butonu işlemleri
       if (count > 1) {
         setCount(count - 1);
-        fiyat = (fiyat + secimlerTutar) * (count - 1);
+        fiyat = fiyat * (count - 1); //+ secimlerTutar)
         setFromData((prev) => ({ ...prev, adet: count - 1, price: fiyat }));
-      } 
+      }
     } else {
-      
       setFromData((prev) => ({ ...prev, [name]: value }));
     }
-    
   };
 
   return (

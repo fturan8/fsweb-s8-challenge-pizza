@@ -7,9 +7,7 @@ export default function OrderSummer(props) {
   //const productPrice = form.price;
 
   const secimlerTutar = form.ekMalzemeler.length * 5;
-  
-  
-  //let fiyat = form.adet * (productPrice + secimlerTutar);
+  let sonFiyat = form.price + (form.adet*secimlerTutar);
 
   //console.log(typeof(productPrice), typeof(form.adet), typeof(secimlerTutar))
 
@@ -27,8 +25,8 @@ export default function OrderSummer(props) {
         </div>
         <div>
           <h3>Sipariş Toplamı</h3>
-          <p>Seçimler: {secimlerTutar}₺</p>
-          <p>Toplam: {form.price+secimlerTutar}₺</p>
+          <p>Seçimler: {form.adet*secimlerTutar}₺</p>
+          <p>Toplam: {sonFiyat}₺</p>
         </div>
         <button >
           Sipariş Ver
