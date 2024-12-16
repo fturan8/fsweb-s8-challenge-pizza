@@ -1,18 +1,31 @@
-import { useState } from "react";
+import { Switch, Route } from "react-router-dom";
 
-
-
-import OrderForm from "./components/OrderForm.jsx";
+import SiparisFormu from "./pages/SiparisFormu.jsx";
+import Banner from "./components/Banner.jsx";
+import { product } from "./dataList.js";
+import Anasayfa from "./pages/Anasayfa.jsx";
+import SiparisOnayi from "./pages/SiparisOnayi.jsx";
 
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
-      <OrderForm />
-
+      <Switch>
+        <Route exact path="/">
+          <Anasayfa />
+        </Route>
+        <Route exact path="/siparis-formu">
+          <SiparisFormu />
+        </Route>
+        <Route exact path="/siparis-onay">
+          <SiparisOnayi />
+        </Route>
+      </Switch>
       
+      {/*<Anasayfa />
+      <SiparisFormu />
+      <SiparisOnayi />*/}
+
       {/* <div>
       <div >
         <a href="https://github.com/Workintech/fsweb-s7-challenge-pizza" target="_blank">

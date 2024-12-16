@@ -28,10 +28,11 @@ export const product = {
 export const orderForm = {
   productName: product.name,
   boyut: "",
-  hamur: "İnce",
+  hamur: "Hamur Kalınlığı",
   ekMalzemeler: [],
   siparisNotu: '',
   price: product.fiyat,
   adet: 1,
+  isim:"",
 };
 
