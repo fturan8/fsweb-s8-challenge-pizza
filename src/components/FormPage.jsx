@@ -234,7 +234,7 @@ export default function FormPage(props) {
         />*/}
       </div>
 
-      <pre>{JSON.stringify(formData, null, 2)}</pre>
+{/*<pre>{JSON.stringify(formData, null, 2)}</pre>*/}
     </>
   );
 }
