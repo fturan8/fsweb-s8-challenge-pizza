@@ -12,6 +12,10 @@ body {
   background-color: #f2f2f2;
 }
 
+span{
+  color: #c20608
+}
+
 .order-form-page {
   position: relative;
   width: 100%;
@@ -185,6 +189,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 }
 
 .rating-comment {

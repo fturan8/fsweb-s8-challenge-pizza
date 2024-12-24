@@ -1,15 +1,18 @@
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import { boyutlar, hamur, ekMalzemeler, orderForm } from "../dataList.js";
-import { useState } from "react";
-import OrderSummary from "./OrderSummary.jsx";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function FormPage(props) {
   const { product } = props;
 
   const [formData, setFromData] = useState(orderForm);
   const [count, setCount] = useState(orderForm.adet);
+  const [errors, setErrors] = useState({});
   let fiyat = product.fiyat;
-  let fiyatVeSecimler = fiyat + formData.ekMalzemeler.length * 5;
+  //let fiyatVeSecimler = fiyat + formData.ekMalzemeler.length * 5;
+  const secimlerTutar = formData.ekMalzemeler.length * 5;
+  let sonFiyat = formData.adet * (secimlerTutar + fiyat);
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
@@ -26,19 +29,19 @@ export default function FormPage(props) {
   };
 
   const handleInputChange = (event) => {
+    event.preventDefault();
     const { name, value } = event.target;
+    
+    
 
     if (name === "adet-arti") {
       // artı butonu işlemleri
       setCount(count + 1);
-      
       setFromData((prev) => ({ ...prev, adet: count + 1 }));
     } else if (name === "adet-eksi") {
-      console.log(count);
       // eksi butonu işlemleri
       if (count > 1) {
         setCount(count - 1);
-        
         setFromData((prev) => ({ ...prev, adet: count - 1 }));
       }
     } else {
@@ -46,15 +49,35 @@ export default function FormPage(props) {
     }
   };
 
-  function butonActions(event) {
-    const { name, value } = event.target;
-    console.log(name,value)
-    setFromData((prev) => ({ ...prev, price: value }));
-    console.log(event.target)
-    document.body.classList.remove("order-form-page");
-    document.body.classList.add("confirm-order");
-    console.log("formData-price",formData.price)
+  function handleSubmit(e) {
+    e.preventDefault();
+ 
+    const validationErrors = {};
+    if (!formData.isim.trim() || formData.isim.length < 4) {
+      validationErrors.isim =
+        "Ad soyad alanı gereklidir ve en az 4 karakter içermelidir.";
+    }
+    if (formData.ekMalzemeler.length < 4) {
+      validationErrors.ekMalzemeler =
+        "En az 4, en fazla 10 malzeme seçilebilir.";
+    }
+    if (formData.hamur === "Hamur Kalınlığı") {
+      validationErrors.hamur = "Hamur kalınlığı seçilmelidir.";
+    }
+    if (formData.boyut === "") {
+      validationErrors.boyut = "Boyut seçilmelidir.";
+    }
+    setErrors(validationErrors);
     
+    if (Object.keys(validationErrors).length === 0) {
+      
+      setFromData((prev) => ({ ...prev, price: sonFiyat }));
+      axios.post("https://reqres.in/api/pizza", formData).then((res) => {
+        console.log(res.data);
+      })
+      document.body.classList.remove("order-form-page");
+      document.body.classList.add("confirm-order");
+    }
   }
 
   //<pre>{JSON.stringify(formData,null,2)}</pre>
@@ -73,7 +96,8 @@ export default function FormPage(props) {
           </div>
         </div>
         <p className="order-form-div-des">{product.description}</p>
-        <Form className="">
+        
+        <Form onSubmit={handleSubmit} >
           <div className="order-radio-dorp-div">
             <div>
               <h3>Boyut Seç</h3>
@@ -81,16 +105,21 @@ export default function FormPage(props) {
                 {boyutlar.map((boyut) => (
                   <FormGroup check>
                     <Input
+                      id={boyut}
                       name="boyut"
                       type="radio"
                       value={boyut}
                       onChange={handleInputChange}
                       checked={formData.boyut === boyut}
                     />
-                    <Label check>{boyut}</Label>
+
+                    <Label for={boyut} check>
+                      {boyut}
+                    </Label>
                   </FormGroup>
                 ))}
               </div>
+              {errors.boyut && <span>{errors.boyut}</span>}
             </div>
             <div>
               <h3>Hamur Seç</h3>
@@ -101,13 +130,15 @@ export default function FormPage(props) {
                   value={formData.hamur}
                   onChange={handleInputChange}
                   placeholder="Hamur Kalınlığı"
-                  
                 >
-                  <option hidden value="">Hamur Kalınlığı</option>
+                  <option hidden value="">
+                    Hamur Kalınlığı
+                  </option>
                   {hamur.map((value) => {
                     return <option>{value}</option>;
                   })}
                 </Input>
+                {errors.hamur && <span>{errors.hamur}</span>}
               </FormGroup>
             </div>
           </div>
@@ -115,6 +146,7 @@ export default function FormPage(props) {
           <div>
             <h3>Ek Malzemeler</h3>
             <p>En Fazla 10 malzeme seçebilirsiniz. 5₺</p>
+
             <div className="order-check-list">
               {ekMalzemeler.map((malzeme) => (
                 <FormGroup check>
@@ -131,6 +163,7 @@ export default function FormPage(props) {
                   </Label>
                 </FormGroup>
               ))}
+              {errors.ekMalzemeler && <span>{errors.ekMalzemeler}</span>}
             </div>
           </div>
           <div>
@@ -144,6 +177,7 @@ export default function FormPage(props) {
                   onChange={handleInputChange}
                   placeholder="Ad-Soyad"
                 />
+                {errors.isim && <span>{errors.isim}</span>}
               </FormGroup>
             </div>
           </div>
@@ -161,13 +195,46 @@ export default function FormPage(props) {
               </FormGroup>
             </div>
           </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <div className="order-count">
+              <button
+                className="home-bt"
+                name="adet-eksi"
+                value={formData.adet}
+                onClick={handleInputChange}
+              >
+                -
+              </button>
+              <p> {formData.adet} </p>
+              <button
+                className="home-bt"
+                name="adet-arti"
+                value={formData.adet}
+                onClick={handleInputChange}
+              >
+                +
+              </button>
+            </div>
+            <div className="order-summary-div">
+              <h3>Sipariş Toplamı</h3>
+              <p>Seçimler: {formData.adet * secimlerTutar}₺</p>
+              <p>Toplam: {sonFiyat}₺</p>
+              {/*<Link to="/siparis-onay"> </Link> */}
+              <button type="submit" className="order-btn">
+                Sipariş Ver
+              </button>
+              
+            </div>
+          </div>
         </Form>
-        <OrderSummary
+        
+        {/*<OrderSummary
           form={formData}
           handleInputChange={handleInputChange}
-          butonAction={butonActions}
-        />
+        />*/}
       </div>
+
+      <pre>{JSON.stringify(formData, null, 2)}</pre>
     </>
   );
 }
